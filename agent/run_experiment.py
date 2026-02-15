@@ -30,10 +30,11 @@ def run_cycle(angle_history: list[int]) -> int:
     post(f"/rotate/{ROTATE_BASE_ANGLE}")
     time.sleep(STEP_DELAY_SECONDS)
 
-    post("/gripper/open")
+    # First change the angle, then actuate the gripper.
+    post(f"/rotate/{angle}")
     time.sleep(STEP_DELAY_SECONDS)
 
-    post(f"/rotate/{angle}")
+    post("/gripper/open")
     time.sleep(STEP_DELAY_SECONDS)
 
     post("/gripper/close")
