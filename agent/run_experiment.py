@@ -26,11 +26,15 @@ def run_cycle(angle_history: list[int]) -> int:
     params = choose_experiment_params(angle_history)
     angle = int(params["angle"])
 
+    # Start with gripper closed.
+    post("/gripper/open")
+    time.sleep(STEP_DELAY_SECONDS)
+
     # Reset rotate servo to calibrated home for consistent orientation.
     post(f"/rotate/{ROTATE_BASE_ANGLE}")
     time.sleep(STEP_DELAY_SECONDS)
 
-    # First change the angle, then actuate the gripper.
+    # Change the angle first, then actuate the gripper.
     post(f"/rotate/{angle}")
     time.sleep(STEP_DELAY_SECONDS)
 
