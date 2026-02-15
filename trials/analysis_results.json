@@ -17,7 +17,7 @@
   },
   "trial3": {
     "outcome_quality": "poor: no discernible cured rectangular features are visible; the substrate appears largely blank aside from minor scuffs/smudges, indicating a failed or extremely weak pattern transfer",
-    "resin_layout": "No clear rectangular cured resin pattern observed. The visible area is a circular metallic substrate with a few faint streaks/marks that do not resemble mask-defined rectangles. No measurable edge definition, corners, or consistent cured regions; any resin present appears either uncured/washed off or too thin to be seen, with no evidence of controlled rectangular geometry or intentional coverage.",
+    "resin_layout": "No clear rectangular cured resin pattern observed. The visible area is a circular metallic substrate with a few faint streaks/marks that seem to start define the rectangular areas",
     "params": {
       "angle": "45",
       "time": "120"

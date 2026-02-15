@@ -22,9 +22,10 @@ def post(path: str) -> dict:
     return response.json()
 
 
-def run_cycle(angle_history: list[int]) -> int:
+def run_cycle(angle_history: list[int]) -> tuple[int, int]:
     params = choose_experiment_params(angle_history)
     angle = int(params["angle"])
+    exposure_time = int(params["time"])
 
     # Start with gripper closed.
     post("/gripper/open")
@@ -38,11 +39,20 @@ def run_cycle(angle_history: list[int]) -> int:
     post(f"/rotate/{angle}")
     time.sleep(STEP_DELAY_SECONDS)
 
+    # post("/gripper/open")
+    # time.sleep(STEP_DELAY_SECONDS)
+
+    # Close gripper (UV light on) and hold for the chosen exposure time.
+    post("/gripper/close")
+
+    print(f"UV exposure: sleeping {exposure_time}s at angle {angle}...")
+    time.sleep(exposure_time)
+    # time.sleep(5)
+
     post("/gripper/open")
     time.sleep(STEP_DELAY_SECONDS)
 
-    post("/gripper/close")
-    return angle
+    return angle, exposure_time
 
 
 if __name__ == "__main__":
@@ -53,10 +63,13 @@ if __name__ == "__main__":
     )
     try:
         while True:
-            chosen_angle = run_cycle(history)
+            chosen_angle, exposure_time = run_cycle(history)
             history.append(chosen_angle)
             history = history[-ANGLE_HISTORY_SIZE:]
-            print(f"Cycle complete with angle {chosen_angle}. History: {history}")
+            print(
+                f"Cycle complete — angle: {chosen_angle}, "
+                f"exposure: {exposure_time}s. History: {history}"
+            )
             time.sleep(CYCLE_DELAY_SECONDS)
     except KeyboardInterrupt:
         print("\nStopped by user.")
