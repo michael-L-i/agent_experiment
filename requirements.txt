@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+pyserial
+openai
+requests
+python-dotenv
