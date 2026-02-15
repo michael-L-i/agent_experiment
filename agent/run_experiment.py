@@ -13,6 +13,7 @@ SERVO_SERVER_URL = os.getenv("SERVO_SERVER_URL", "http://127.0.0.1:8000")
 STEP_DELAY_SECONDS = float(os.getenv("STEP_DELAY_SECONDS", "1.0"))
 CYCLE_DELAY_SECONDS = float(os.getenv("CYCLE_DELAY_SECONDS", "5.0"))
 ANGLE_HISTORY_SIZE = int(os.getenv("ANGLE_HISTORY_SIZE", "5"))
+ROTATE_BASE_ANGLE = int(os.getenv("ROTATE_BASE_ANGLE", "25"))
 
 
 def post(path: str) -> dict:
@@ -24,6 +25,10 @@ def post(path: str) -> dict:
 def run_cycle(angle_history: list[int]) -> int:
     params = choose_experiment_params(angle_history)
     angle = int(params["angle"])
+
+    # Reset rotate servo to calibrated home for consistent orientation.
+    post(f"/rotate/{ROTATE_BASE_ANGLE}")
+    time.sleep(STEP_DELAY_SECONDS)
 
     post("/gripper/open")
     time.sleep(STEP_DELAY_SECONDS)
@@ -37,7 +42,10 @@ def run_cycle(angle_history: list[int]) -> int:
 
 if __name__ == "__main__":
     history: list[int] = []
-    print("Running experiment loop. Press Ctrl+C to stop.")
+    print(
+        "Running experiment loop. Press Ctrl+C to stop. "
+        f"Rotate base angle: {ROTATE_BASE_ANGLE}"
+    )
     try:
         while True:
             chosen_angle = run_cycle(history)

@@ -12,6 +12,10 @@ client = OpenAI()
 
 MODEL = os.getenv("OPENAI_MODEL", "gpt-5.2")
 ANGLE_HISTORY_SIZE = int(os.getenv("ANGLE_HISTORY_SIZE", "5"))
+ROTATE_BASE_ANGLE = int(os.getenv("ROTATE_BASE_ANGLE", "25"))
+ROTATE_RANGE_DEGREES = int(os.getenv("ROTATE_RANGE_DEGREES", "90"))
+ROTATE_MIN_ANGLE = max(0, ROTATE_BASE_ANGLE)
+ROTATE_MAX_ANGLE = min(180, ROTATE_BASE_ANGLE + ROTATE_RANGE_DEGREES)
 
 
 def _extract_angle(model_output: str) -> int:
@@ -20,8 +24,11 @@ def _extract_angle(model_output: str) -> int:
     if not match:
         raise ValueError(f"Model response did not contain an integer angle: {output!r}")
     angle = int(match.group())
-    if not 0 <= angle <= 180:
-        raise ValueError(f"Model angle out of range: {angle}")
+    if not ROTATE_MIN_ANGLE <= angle <= ROTATE_MAX_ANGLE:
+        raise ValueError(
+            f"Model angle out of range: {angle}. "
+            f"Expected {ROTATE_MIN_ANGLE}..{ROTATE_MAX_ANGLE}."
+        )
     return angle
 
 
@@ -36,14 +43,15 @@ def choose_experiment_params(angle_history: list[int] | None = None) -> dict:
                 "role": "system",
                 "content": (
                     "You control an Arduino experiment with a rotate servo. "
-                    "Return exactly one integer angle from 0 to 180."
+                    f"Return exactly one integer angle from {ROTATE_MIN_ANGLE} to {ROTATE_MAX_ANGLE}."
                 ),
             },
             {
                 "role": "user",
                 "content": (
                     "Pick a random valid rotate angle now. "
-                    f"Avoid these recent angles: {exclude_text}."
+                    f"Avoid these recent angles: {exclude_text}. "
+                    f"The calibrated base orientation is {ROTATE_BASE_ANGLE}."
                 ),
             },
         ],
@@ -51,9 +59,9 @@ def choose_experiment_params(angle_history: list[int] | None = None) -> dict:
 
     angle = _extract_angle(response.output_text)
     if angle in recent_angles:
-        allowed = [a for a in range(181) if a not in recent_angles]
+        allowed = [a for a in range(ROTATE_MIN_ANGLE, ROTATE_MAX_ANGLE + 1) if a not in recent_angles]
         if not allowed:
-            allowed = list(range(181))
+            allowed = list(range(ROTATE_MIN_ANGLE, ROTATE_MAX_ANGLE + 1))
         angle = random.choice(allowed)
     return {"angle": angle}
 
