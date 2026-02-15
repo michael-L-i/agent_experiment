@@ -3,6 +3,18 @@
 Servo gripperServo;
 Servo rotateServo;
 
+const int STEP_DELAY_MS = 15;  // milliseconds between each 1-degree step
+
+void slowMove(Servo &servo, int target) {
+  int current = servo.read();
+  int step = (target > current) ? 1 : -1;
+  while (current != target) {
+    current += step;
+    servo.write(current);
+    delay(STEP_DELAY_MS);
+  }
+}
+
 void setup() {
   gripperServo.attach(9);
   rotateServo.attach(10);
@@ -19,11 +31,11 @@ void loop() {
     if (command.startsWith("S1:")) {
       int angle = command.substring(3).toInt();
       angle = constrain(angle, 0, 180);
-      gripperServo.write(angle);
+      slowMove(gripperServo, angle);
     } else if (command.startsWith("S2:")) {
       int angle = command.substring(3).toInt();
       angle = constrain(angle, 0, 180);
-      rotateServo.write(angle);
+      slowMove(rotateServo, angle);
     }
   }
 }

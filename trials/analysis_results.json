@@ -1,0 +1,26 @@
+{
+  "trial1": {
+    "outcome_quality": "good: rectangular features are clearly visible with mostly defined edges and consistent coverage. Minor rounding at corners and slight edge diffusion are present, but overall pattern transfer is successful and structurally coherent.",
+    "resin_layout": "Rectangular cured regions are present with largely continuous perimeters and uniform interior fill. Edges show slight softening and minimal blob formation at corners, but geometry is recognizable and aligned with intended mask features. Coverage is stable with no major gaps.",
+    "params": {
+      "angle": "92",
+      "time": "300"
+    }
+  },
+  "trial2": {
+    "outcome_quality": "poor: no clear rectangular features formed; only a few small irregular cured patches are visible, suggesting severe underexposure, masking/misalignment, or resin loss during development",
+    "resin_layout": "Substrate shows ~3 small opaque/white cured resin islands near the upper-left/central area. Shapes are rounded/amoeba-like with soft, uneven boundaries and no straight edges or corners; no rectangular geometry is present. Coverage is sparse with large areas uncured/clean. Likely defect pattern consistent with partial curing, contamination/droplets, or scattered light rather than faithful mask transfer; minimal but localized resin spread around each island with no uniform rectangular perimeter.",
+    "params": {
+      "angle": "115",
+      "time": "360"
+    }
+  },
+  "trial3": {
+    "outcome_quality": "poor: no discernible cured rectangular features are visible; the substrate appears largely blank aside from minor scuffs/smudges, indicating a failed or extremely weak pattern transfer",
+    "resin_layout": "No clear rectangular cured resin pattern observed. The visible area is a circular metallic substrate with a few faint streaks/marks that do not resemble mask-defined rectangles. No measurable edge definition, corners, or consistent cured regions; any resin present appears either uncured/washed off or too thin to be seen, with no evidence of controlled rectangular geometry or intentional coverage.",
+    "params": {
+      "angle": "45",
+      "time": "120"
+    }
+  }
+}
